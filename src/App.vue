@@ -1,9 +1,15 @@
 <template>
-<div class="main-container">
-  <h1>Countries</h1>
-  <country-list :countries = "countries"></country-list>
 
-</div>
+  <div>
+    <h1>Countries</h1>
+    <div class="main-container">
+
+      <country-list :countries = "countries"></country-list>
+      <country-detail :country = "selectedCountry"></country-detail>
+
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -15,14 +21,19 @@ export default {
   name: 'app',
   data(){
     return {
-      countries: []
+      countries: [],
+      selectedCountry: null
 
-    }
+    };
   },
   mounted() {
   fetch('https://restcountries.eu/rest/v2/all')
   .then(res => res.json())
-  .then(countries => this.countries = countries)},
+  .then(countries => this.countries = countries)
+  eventBus.$on('country-selected', (country) => {
+    this.selectedCountry = country;
+  })
+},
   // eventBus.$on
   components: {
     "country-list": CountryList,
@@ -32,6 +43,10 @@ export default {
 </script>
 
 <style>
+.main-container {
+  display: flex;
+  justify-content: space-between;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
